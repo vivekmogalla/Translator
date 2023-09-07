@@ -10,30 +10,27 @@ from ...config.parameters import get_target_language, target_lang_file_path
 def translate_file(input_file_path, input_txt_path,destination_file):
     
     if input_file_path.name.endswith(".docx"):
-        #inp_f = remove_filenames_starting_with_tilde(inp)
         print("input_file_path", input_file_path)
         
         # Convert .docx file to .txt files 
         base_file = os.path.basename(input_file_path.name)
-        base_filename=os.path.splitext(base_file)[0]
-        actual_filename=base_filename
+        base_filename = os.path.splitext(base_file)[0]
+        actual_filename = base_filename
         txt_file_path = os.path.join(input_txt_path, base_filename + ".txt")
-        docx_file_path=input_file_path
-        selected_filename=base_filename   
+        docx_file_path = input_file_path
+        selected_filename = base_filename
         convert_docx_to_txt(docx_file_path, txt_file_path)
         
         if txt_file_path.endswith(".txt"):
-            #set path for the destination file
             destination_path = os.path.join(destination_file, actual_filename)
-                       
-           
-            if get_target_language()=='kn':
-                destination_file_path= "{}_kan.txt".format(destination_path)
+
+            if get_target_language() == 'kn':
+                destination_file_path = "{}_kan.txt".format(destination_path)
             
             else:
                 destination_file_path = "{}_tam.txt".format(destination_path)
         
-        input_file=txt_file_path
+        input_file = txt_file_path
         print(input_file)
         print(selected_filename)    
         

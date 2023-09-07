@@ -9,19 +9,21 @@ from .config.parameters import update_target_language, update_target_language_fi
 from .config.path import input_txt_path, kannada_file_path, tamil_file_path
 
 
+# Define a view for translation
 def translate(request):
     if request.method == 'POST':
+        # Get data from the form
         source_lang = request.POST.get('source_language')
         des_lang = request.POST.get('destination_language')
         content_type = request.POST.get('content_type')
-        content = request.POST.get('content')
         pipeline_choice = request.POST.get('pipeline_choice') # Get the pipeline choice from the POST data
 
+        # Create a new translation object and save it to the database
         translation = Translation.objects.create(source_language=source_lang,
                                                  destination_language=des_lang,
                                                  content_type=content_type,
                                                  pipeline_choice=pipeline_choice)
-        # update the language settings
+        # Update the language settings
         if des_lang == 'ta':
             update_target_language('ta')
             update_target_language_filepath(tamil_file_path)
@@ -29,8 +31,9 @@ def translate(request):
             update_target_language('kn')
             update_target_language_filepath(kannada_file_path)
 
-        # check the pipeline choices the user has chosen
+        # Check the selected pipeline and content type
         if (content_type == 'file') and (pipeline_choice == 'slm'):
+            # Handle the file translation using the slm package
 
             input_file_object = request.FILES.get('input_file')
             translation.input_file = input_file_object
@@ -43,13 +46,13 @@ def translate(request):
                 pass
 
             # function call to invoke slm_translate_content
-            # import pdb; pdb.set_trace()
             slm_file.slm_translate_content(input_file_object, translated_content_file_path)
             translation.translated_file.name = translated_content_file_path
             translation.save()
             return redirect('success_page')  # Redirect to a success page
 
         elif (content_type == 'file') and (pipeline_choice == 'translate_file'):
+            # Handle the file translation using the 'translate_file' pipeline
             input_file_object = request.FILES.get('input_file') # uploaded file object
             translation.input_file = input_file_object
             destination_file_path = os.path.join(settings.MEDIA_ROOT, 'translated_files')
@@ -64,9 +67,6 @@ def translate(request):
             translation.save()
             print("outside the function")
             return redirect('success_page')  # Redirect to a success page
-
-        elif pipeline_choice == 'translate_folder':
-            return HttpResponse("This functionality is not developed")
 
     context = {'translation': Translation}
     return render(request, 'translation_form.html', context)  # Render your template for the translation form
