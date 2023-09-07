@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translation Form</title>
+</head>
+<body>
+    <h1>Translation Request Form</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="source_language">Source Language:</label>
+        <select name="source_language" required>
+            <option value="" selected disabled>Select Source Language</option>
+            {% for choice in translation.SOURCE_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="destination_language">Destination Language:</label>
+        <select name="destination_language" required>
+            <option value="" selected disabled>Select Destination Language</option>
+            {% for choice in translation.DESTINATION_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="content_type">Content Type:</label>
+        <select name="content_type" required>
+            <option value="" selected disabled>Select Content Type</option>
+            {% for choice in translation.TYPE_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="input_file">Input File:</label>
+        <input type="file" name="input_file" ><br><br>
+
+        <label for="pipeline_choice">Choose Pipeline:</label>
+
+         <select id="pipeline_choice" name="pipeline_choice">
+              <option value="slm">SLM</option>
+              <option value="translate_file">Translate File Highlighted Keywords</option>
+              <option value="translate_folder">Translate Folder Highlighted Keywords</option>
+         </select><br><br>
+
+        <button type="submit">Translate</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- home.html -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to toggle form fields based on selected content type
+        function toggleFields() {
+            var contentType = document.getElementById("id_content_type").value;
+            var textForm = document.getElementById("text-form");
+            var fileForm = document.getElementById("file-form");
+
+            if (contentType === "text") {
+                textForm.style.display = "block";
+                fileForm.style.display = "none";
+            } else if (contentType === "file") {
+                textForm.style.display = "none";
+                fileForm.style.display = "block";
+            } else {
+                textForm.style.display = "none";
+                fileForm.style.display = "none";
+            }
+        }
+
+        // Attach the toggleFields function to the content type select input's change event
+        var contentTypeSelect = document.getElementById("id_content_type");
+        contentTypeSelect.addEventListener("change", toggleFields);
+
+        // Call the toggleFields function initially to set the initial display state
+        toggleFields();
+    });
+</script>
+
+<form method="post" enctype="multipart/form-data" action="{% url 'translate' %}">
+    {% csrf_token %}
+
+    <label for="id_source_language">Source Language:</label>
+    {{ form.source_language }}
+    <br> <br>
+
+    <label for="id_destination_language">Destination Language:</label>
+    {{ form.destination_language }}
+    <br> <br>
+
+    <label for="id_content_type">Content Type:</label>
+    {{ form.content_type }}
+    <br> <br>
+    <div id="text-form" style="display: none;">
+        <label for="id_input_text">Input Text:</label>
+        {{ input_text_form.input_text }}
+    </div>
+
+    <div id="file-form" style="display: none;">
+        <label for="{{ file_form.file.id_for_label }}">Upload File:</label>
+        {{ file_form.file }}
+        <button type="submit">Upload</button>
+    </div>
+
+    <button type="submit">Translate</button>
+</form>
+
+</body>
+</html>
