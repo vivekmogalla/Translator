@@ -6,7 +6,8 @@ from ...utils import convert_docx_to_txt, find_uppercase_words, read_file_conten
 from ...config.parameters import get_target_language, target_lang_file_path
 
 
-#function part of a script designed to translate and transliterate content from DOCX files to text files in a specific language
+#  function part of a script designed to translate and transliterate content from
+#  DOCX files to text files in a specific language
 def translate_file(input_file_path, input_txt_path,destination_file):
     
     if input_file_path.name.endswith(".docx"):
@@ -36,36 +37,31 @@ def translate_file(input_file_path, input_txt_path,destination_file):
         
         highlighted_list = read_keyword(docx_file_path)
         
-        higlight_list_stripped = remove_special_characters(highlighted_list)
+        highlighted_list_stripped = remove_special_characters(highlighted_list)
         
-        highlighted_translated = transliterate_keywords(higlight_list_stripped, get_target_language())
+        highlighted_translated = transliterate_keywords(highlighted_list_stripped, get_target_language())
 
-        #read entire content of file
+        #  read entire content of file
         content = read_file_content(input_file)
         
-        #extract acronyms
+        #  extract acronyms
         uppercase_words_list = find_uppercase_words(content)
         
-        #remove filenames specified in capital letters
+        #  remove filenames specified in capital letters
         acro_remaining = remove_acronym(selected_filename, uppercase_words_list)
 
-        #get mapping of alphabets in target language
+        #  get mapping of alphabets in target language
         mapping_target_language = get_alphabet_dictionary(target_lang_file_path)
 
-        #transliterate the acronyms
+        #  transliterate the acronyms
         target_language_words = transliterate_acronyms(acro_remaining, mapping_target_language)
         
-        #create dictionary of keywords together with acronyms
+        #  create dictionary of keywords together with acronyms
         source_target_lang_dict = convert_to_dict(highlighted_translated,target_language_words)
-
 
         read_write_file(input_file, destination_file_path,actual_filename,source_target_lang_dict)
 
         return destination_file_path
-        
-
-        
-#End of function
 
 
 
